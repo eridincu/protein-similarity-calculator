@@ -126,13 +126,13 @@ function createMd5CspHash(firstProteinSequence, secondProteinSequence) {
   if (firstProteinSequence.localeCompare(secondProteinSequence)) {
     return crypto
       .createHash("md5")
-      .update("TEST" + "OTHERTEST")
+      .update(secondProteinSequence + firstProteinSequence)
       .digest("base64");
   } else {
     return (
       "sha256-" +
       crypto
-        .createHash("sha256")
+        .createHash("md5")
         .update(secondProteinSequence + firstProteinSequence)
         .digest("base64")
     );
