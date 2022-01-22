@@ -27,14 +27,17 @@ app.post("/similarity", async (req, res) => {
   const body = req.body;
   console.log(body);
 
-  const firstProteinSequence = body.firstProteinSequence;
-  const secondProteinSequence = body.secondProteinSequence;
+  const rawFirstProteinSequence = body.firstProteinSequence;
+  const rawSecondProteinSequence = body.secondProteinSequence;
 
   const validationResult = validateBody(
-    firstProteinSequence,
-    secondProteinSequence
+    rawFirstProteinSequence,
+    rawSecondProteinSequence
   );
   if (validationResult.success) {
+    const firstProteinSequence = rawFirstProteinSequence.toUpperCase()
+    const secondProteinSequence = rawSecondProteinSequence.toUpperCase()
+
     const proteinHashId = createMd5CspHash(
       firstProteinSequence,
       secondProteinSequence
@@ -146,13 +149,15 @@ const validateBody = function (firstProteinSequence, secondProteinSequence) {
     return { success: false, message: "Sequence can only contain letters." };
   }
   
-  for (let i = 0; i < firstProteinSequence.length; i++) {
-    if (!PROTEIN_ALPHABET.has(firstProteinSequence[i])) {
+  const uppercaseFirstProteinSequence = firstProteinSequence.toUpperCase()
+  const uppercaseSecondProteinSequence = secondProteinSequence.toUpperCase()
+  for (let i = 0; i < uppercaseFirstProteinSequence.length; i++) {
+    if (!PROTEIN_ALPHABET.has(uppercaseFirstProteinSequence[i])) {
       return { success: false, message: "Sequence contains invalid aminoacid code." };
     }
   }
-  for (let i = 0; i < secondProteinSequence.length; i++) {
-    if (!PROTEIN_ALPHABET.has(secondProteinSequence[i])) {
+  for (let i = 0; i < uppercaseSecondProteinSequence.length; i++) {
+    if (!PROTEIN_ALPHABET.has(uppercaseSecondProteinSequence[i])) {
       return { success: false, message: "Sequence contains invalid aminoacid code." };
     }
   }
@@ -163,12 +168,12 @@ function createMd5CspHash(firstProteinSequence, secondProteinSequence) {
   if (firstProteinSequence.localeCompare(secondProteinSequence)) {
     return crypto
       .createHash("md5")
-      .update(firstProteinSequence + secondProteinSequence)
+      .update(firstProteinSequence + "_" + secondProteinSequence)
       .digest("base16");
   } else {
     return crypto
       .createHash("md5")
-      .update(secondProteinSequence + firstProteinSequence)
+      .update(secondProteinSequence + "_" + firstProteinSequence)
       .digest("base16");
   }
 }
