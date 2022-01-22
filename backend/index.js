@@ -101,6 +101,9 @@ const getModelScore = async function (
 const validateBody = function (firstProteinSequence, secondProteinSequence) {
   console.log(firstProteinSequence);
   console.log(secondProteinSequence);
+  if (firstProteinSequence === undefined || secondProteinSequence === undefined) {
+    return { success: false, message: "Sequences should be initialized." }
+  }
   if (firstProteinSequence.length === 0 || secondProteinSequence.length === 0) {
     return { success: false, message: "Sequence cannot be empty" };
   }
