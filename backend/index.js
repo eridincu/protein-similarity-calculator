@@ -35,7 +35,7 @@ app.post("/similarity", async (req, res) => {
     secondProteinSequence
   );
   if (validationResult.success) {
-    const proteinHashId = createSha256CspHash(
+    const proteinHashId = createMd5CspHash(
       firstProteinSequence,
       secondProteinSequence
     );
@@ -53,7 +53,8 @@ app.post("/similarity", async (req, res) => {
     } else {
       const result = await getModelScore(
         firstProteinSequence,
-        secondProteinSequence
+        secondProteinSequence,
+        proteinHashId
       );
       if (result.success) {
         res.status(200).json(result);
@@ -68,12 +69,14 @@ app.post("/similarity", async (req, res) => {
 
 const getModelScore = async function (
   firstProteinSequence,
-  secondProteinSequence
+  secondProteinSequence,
+  proteinHashId
 ) {
   const res = await axios
     .post(process.env.PYTHON_URL + ":" + process.env.PYTHON_PORT, {
       firstProteinSequence: firstProteinSequence,
       secondProteinSequence: secondProteinSequence,
+      proteinHashId: proteinHashId
     })
     .catch(function (error) {
       if (error.response) {
@@ -112,7 +115,7 @@ const validateBody = function (firstProteinSequence, secondProteinSequence) {
   return { success: true, message: "Sequences are validated." };
 };
 
-function createSha256CspHash(firstProteinSequence, secondProteinSequence) {
+function createMd5CspHash(firstProteinSequence, secondProteinSequence) {
   if (firstProteinSequence.localeCompare(secondProteinSequence)) {
     return crypto
       .createHash("md5")
