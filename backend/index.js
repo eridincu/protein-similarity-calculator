@@ -77,7 +77,7 @@ const getModelScore = async function (
   proteinHashId
 ) {
   const res = await axios
-    .post(process.env.PYTHON_URL + ":" + process.env.PYTHON_PORT, {
+    .post(process.env.PYTHON_URL + ":" + process.env.PYTHON_PORT + "/", {
       firstProteinSequence: firstProteinSequence,
       secondProteinSequence: secondProteinSequence,
       proteinHashId: proteinHashId
