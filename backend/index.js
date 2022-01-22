@@ -39,10 +39,19 @@ app.post("/similarity", async (req, res) => {
       secondProteinSequence
     );
 
-    const proteinRef = db.collection("train-pairs").doc(proteinHashId);
-    const doc = await proteinRef.get();
-    if (doc.exists) {
-      const proteinData = doc.data();
+    if (firstProteinSequence === secondProteinSequence) {
+      res.status(200).json({
+        success: true,
+        score: 1.0,
+        is_sw: true
+      })
+      return
+    }
+
+    const trainProteinRef = db.collection("train-pairs").doc(proteinHashId);
+    const docInTrainPairs = await trainProteinRef.get();
+    if (docInTrainPairs.exists) {
+      const proteinData = docInTrainPairs.data();
       const scoreResult = {
         success: true,
         score: proteinData.score,
@@ -50,15 +59,27 @@ app.post("/similarity", async (req, res) => {
       };
       res.status(200).json(scoreResult);
     } else {
-      const result = await getModelScore(
-        firstProteinSequence,
-        secondProteinSequence,
-        proteinHashId
-      );
-      if (result.success) {
-        res.status(200).json(result);
+      const newProteinRef = db.collection("new-pairs").doc(proteinHashId)
+      const docInNewPairs = await newProteinRef.get()
+      if (docInNewPairs.exists) {
+        const proteinData = docInNewPairs.data();
+        const scoreResult = {
+          success: true,
+          score: proteinData.score,
+          is_sw: true,
+        };
+        res.status(200).json(scoreResult);
       } else {
-        res.status(200).json(result);
+        const result = await getModelScore(
+          firstProteinSequence,
+          secondProteinSequence,
+          proteinHashId
+        );
+        if (result.success) {
+          res.status(200).json(result);
+        } else {
+          res.status(200).json(result);
+        }
       }
     }
   } else {
@@ -131,12 +152,12 @@ function createMd5CspHash(firstProteinSequence, secondProteinSequence) {
     return crypto
       .createHash("md5")
       .update(firstProteinSequence + secondProteinSequence)
-      .digest("base64");
+      .digest("base16");
   } else {
     return crypto
       .createHash("md5")
       .update(secondProteinSequence + firstProteinSequence)
-      .digest("base64");
+      .digest("base16");
   }
 }
 app.listen(port, () => {
