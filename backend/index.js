@@ -127,13 +127,10 @@ function createMd5CspHash(firstProteinSequence, secondProteinSequence) {
       .update(firstProteinSequence + secondProteinSequence)
       .digest("base64");
   } else {
-    return (
-      "sha256-" +
-      crypto
-        .createHash("md5")
-        .update(secondProteinSequence + firstProteinSequence)
-        .digest("base64")
-    );
+    return crypto
+      .createHash("md5")
+      .update(secondProteinSequence + firstProteinSequence)
+      .digest("base64");
   }
 }
 app.listen(port, () => {
