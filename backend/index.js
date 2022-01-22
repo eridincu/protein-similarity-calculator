@@ -1,13 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const crypto = require("crypto");
-const {
-  initializeApp,
-  applicationDefault,
-} = require("firebase-admin/app");
-const {
-  getFirestore,
-} = require("firebase-admin/firestore");
+const { initializeApp, applicationDefault } = require("firebase-admin/app");
+const { getFirestore } = require("firebase-admin/firestore");
 const axios = require("axios");
 
 initializeApp({
@@ -23,9 +18,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
-})
+});
 
 app.post("/similarity", async (req, res) => {
   const body = req.body;
@@ -80,7 +75,7 @@ const getModelScore = async function (
     .post(process.env.PYTHON_URL + ":" + process.env.PYTHON_PORT + "/", {
       firstProteinSequence: firstProteinSequence,
       secondProteinSequence: secondProteinSequence,
-      proteinHashId: proteinHashId
+      proteinHashId: proteinHashId,
     })
     .catch(function (error) {
       if (error.response) {
@@ -103,10 +98,13 @@ const getModelScore = async function (
 };
 
 const validateBody = function (firstProteinSequence, secondProteinSequence) {
-  console.log(firstProteinSequence);
-  console.log(secondProteinSequence);
-  if (firstProteinSequence === undefined || secondProteinSequence === undefined) {
-    return { success: false, message: "Sequences should be initialized." }
+  console.log("first protein sequence:", firstProteinSequence);
+  console.log("second protein sequence:", secondProteinSequence);
+  if (
+    firstProteinSequence === undefined ||
+    secondProteinSequence === undefined
+  ) {
+    return { success: false, message: "Sequences should be initialized." };
   }
   if (firstProteinSequence.length === 0 || secondProteinSequence.length === 0) {
     return { success: false, message: "Sequence cannot be empty" };
