@@ -50,7 +50,7 @@ app.post("/similarity", async (req, res) => {
     const proteinHashId = createMd5CspHash(
       firstProteinSequence,
       secondProteinSequence
-    ).toString();
+    ).toUpperCase();
     console.log("protein hash id", proteinHashId)
 
     const trainProteinRef = db.collection("train-pairs").doc(proteinHashId);
@@ -166,16 +166,16 @@ const validateBody = function (firstProteinSequence, secondProteinSequence) {
 };
 
 function createMd5CspHash(firstProteinSequence, secondProteinSequence) {
-  if (firstProteinSequence.localeCompare(secondProteinSequence)) {
+  if (firstProteinSequence.localeCompare(secondProteinSequence) < 0) {
     return crypto
       .createHash("md5")
       .update(firstProteinSequence + "_" + secondProteinSequence)
-      .digest("base16");
+      .digest("hex");
   } else {
     return crypto
       .createHash("md5")
       .update(secondProteinSequence + "_" + firstProteinSequence)
-      .digest("base16");
+      .digest("hex");
   }
 }
 app.listen(port, () => {
