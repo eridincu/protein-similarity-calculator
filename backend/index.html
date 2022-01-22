@@ -76,7 +76,7 @@
             console.log("first sequence:", firstProteinSequence)
             console.log("second sequence:", secondProteinSequence)
 
-            const posting = $.ajax(window.location.href, {
+            const posting = $.ajax(window.location.href + "similarity", {
                 data: JSON.stringify({firstProteinSequence, secondProteinSequence}),
                 contentType: 'application/json',
                 type: 'POST'
