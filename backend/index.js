@@ -74,7 +74,7 @@ const getModelScore = async function (
   secondProteinSequence
 ) {
   const res = await axios
-    .post(process.env.HOST, {
+    .post(process.env.PYTHON_URL + ":" + process.env.PYTHON_PORT, {
       firstProteinSequence: firstProteinSequence,
       secondProteinSequence: secondProteinSequence,
     })
