@@ -21,7 +21,11 @@ const port = process.env.PORT;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static("../frontend"));
+app.use(express.static(__dirname));
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+})
 
 app.post("/similarity", async (req, res) => {
   const body = req.body;
