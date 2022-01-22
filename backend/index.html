@@ -86,7 +86,10 @@
                 console.log(result)
                 let outputText;
                 if (result.success) {
-                    outputText = result.score
+                    outputText = result.score.toString()
+                    if (result.is_sw) {
+                        outputText = outputText + " (Actual Smith Waterman score from cache)"
+                    }
                 } else {
                     outputText = result.message
                 }

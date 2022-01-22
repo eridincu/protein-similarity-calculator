@@ -92,6 +92,12 @@ const getModelScore = async function (
       };
     });
   console.log(res.data);
+  if (res.data.score === -1) {
+    return {
+      success: false,
+      message: "Error occured while getting model prediciton.",
+    };
+  }
   const score = res.data.score;
 
   return { success: true, score: score, is_sw: false };
