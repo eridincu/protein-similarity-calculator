@@ -38,11 +38,6 @@ app.post("/similarity", async (req, res) => {
     const firstProteinSequence = rawFirstProteinSequence.toUpperCase()
     const secondProteinSequence = rawSecondProteinSequence.toUpperCase()
 
-    const proteinHashId = createMd5CspHash(
-      firstProteinSequence,
-      secondProteinSequence
-    );
-
     if (firstProteinSequence === secondProteinSequence) {
       res.status(200).json({
         success: true,
@@ -52,6 +47,12 @@ app.post("/similarity", async (req, res) => {
       return
     }
 
+    const proteinHashId = createMd5CspHash(
+      firstProteinSequence,
+      secondProteinSequence
+    );
+    console.log("protein hash id", proteinHashId)
+    
     const trainProteinRef = db.collection("train-pairs").doc(proteinHashId);
     const docInTrainPairs = await trainProteinRef.get();
     if (docInTrainPairs.exists) {
