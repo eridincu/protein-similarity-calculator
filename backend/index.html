@@ -76,7 +76,7 @@
             console.log("first sequence:", firstProteinSequence)
             console.log("second sequence:", secondProteinSequence)
 
-            const url = "http://localhost:3000/similarity";
+            const url = process.env.BACKEND_HOST;
             const posting = $.ajax(url, {
                 data: JSON.stringify({firstProteinSequence, secondProteinSequence}),
                 contentType: 'application/json',
