@@ -4,12 +4,9 @@ const crypto = require("crypto");
 const {
   initializeApp,
   applicationDefault,
-  cert,
 } = require("firebase-admin/app");
 const {
   getFirestore,
-  Timestamp,
-  FieldValue,
 } = require("firebase-admin/firestore");
 const axios = require("axios");
 
@@ -86,7 +83,7 @@ const getModelScore = async function (
         console.log(error.request);
       } else {
         console.log("Error", error.message);
-      } 
+      }
       return {
         success: false,
         message: "Error occured while getting model prediciton.",
@@ -117,13 +114,10 @@ const validateBody = function (firstProteinSequence, secondProteinSequence) {
 
 function createSha256CspHash(firstProteinSequence, secondProteinSequence) {
   if (firstProteinSequence.localeCompare(secondProteinSequence)) {
-    return (
-      "sha256-" +
-      crypto
-        .createHash("sha256")
-        .update(firstProteinSequence + secondProteinSequence)
-        .digest("base64")
-    );
+    return crypto
+      .createHash("md5")
+      .update("TEST" + "OTHERTEST")
+      .digest("base64");
   } else {
     return (
       "sha256-" +
