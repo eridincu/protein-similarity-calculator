@@ -76,7 +76,6 @@
             console.log("first sequence:", firstProteinSequence)
             console.log("second sequence:", secondProteinSequence)
 
-            const url = process.env.BACKEND_HOST;
             const posting = $.ajax(window.location.href, {
                 data: JSON.stringify({firstProteinSequence, secondProteinSequence}),
                 contentType: 'application/json',
