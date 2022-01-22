@@ -10,9 +10,10 @@ initializeApp({
 });
 
 const db = getFirestore();
-
 const app = express();
 const port = process.env.PORT;
+
+const PROTEIN_ALPHABET = new Set(['A', 'R', 'N', 'D', 'C','E','Q','G','H','I','L','K','M','F','P','S','T','W','Y','V'])
 
 app.use(cors());
 app.use(express.json());
@@ -143,6 +144,17 @@ const validateBody = function (firstProteinSequence, secondProteinSequence) {
     )
   ) {
     return { success: false, message: "Sequence can only contain letters." };
+  }
+  
+  for (let i = 0; i < firstProteinSequence.length; i++) {
+    if (!PROTEIN_ALPHABET.has(firstProteinSequence[i])) {
+      return { success: false, message: "Sequence contains invalid aminoacid code." };
+    }
+  }
+  for (let i = 0; i < secondProteinSequence.length; i++) {
+    if (!PROTEIN_ALPHABET.has(secondProteinSequence[i])) {
+      return { success: false, message: "Sequence contains invalid aminoacid code." };
+    }
   }
   return { success: true, message: "Sequences are validated." };
 };
