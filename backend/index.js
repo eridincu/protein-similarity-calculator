@@ -50,9 +50,9 @@ app.post("/similarity", async (req, res) => {
     const proteinHashId = createMd5CspHash(
       firstProteinSequence,
       secondProteinSequence
-    );
+    ).toString();
     console.log("protein hash id", proteinHashId)
-    
+
     const trainProteinRef = db.collection("train-pairs").doc(proteinHashId);
     const docInTrainPairs = await trainProteinRef.get();
     if (docInTrainPairs.exists) {
