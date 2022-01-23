@@ -71,7 +71,7 @@ app.post("/similarity", async (req, res) => {
         const scoreResult = {
           success: true,
           score: proteinData.score,
-          is_sw: true,
+          is_sw: false,
         };
         res.status(200).json(scoreResult);
       } else {
