@@ -59,7 +59,7 @@ app.post("/similarity", async (req, res) => {
       const proteinData = docInTrainPairs.data();
       const scoreResult = {
         success: true,
-        score: proteinData.score,
+        score: Math.abs(proteinData.score),
         is_sw: true,
       };
       res.status(200).json(scoreResult);
@@ -70,7 +70,7 @@ app.post("/similarity", async (req, res) => {
         const proteinData = docInNewPairs.data();
         const scoreResult = {
           success: true,
-          score: proteinData.score,
+          score: Math.abs(proteinData.score),
           is_sw: false,
         };
         res.status(200).json(scoreResult);
@@ -124,7 +124,7 @@ const getModelScore = async function (
       message: "Error occured while getting model prediciton.",
     };
   }
-  const score = res.data.score;
+  const score = Math.abs(res.data.score);
 
   return { success: true, score: score, is_sw: false };
 };
